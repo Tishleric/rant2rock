@@ -1,0 +1,135 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 266 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 266 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 266 10% 10%;
+
+    --primary: 266 35% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 266 20% 95%;
+    --secondary-foreground: 266 35% 35%;
+
+    --muted: 266 10% 90%;
+    --muted-foreground: 266 20% 40%;
+
+    --accent: 266 35% 90%;
+    --accent-foreground: 266 35% 30%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 266 20% 88%;
+    --input: 266 20% 88%;
+    --ring: 266 35% 45%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 266 30% 8%;
+    --foreground: 266 10% 95%;
+
+    --card: 266 25% 12%;
+    --card-foreground: 266 10% 95%;
+
+    --popover: 266 25% 12%;
+    --popover-foreground: 266 10% 95%;
+
+    --primary: 266 35% 65%;
+    --primary-foreground: 266 10% 10%;
+
+    --secondary: 266 25% 20%;
+    --secondary-foreground: 266 10% 95%;
+
+    --muted: 266 25% 20%;
+    --muted-foreground: 266 10% 75%;
+
+    --accent: 266 25% 25%;
+    --accent-foreground: 266 10% 95%;
+
+    --destructive: 0 62.8% 40.6%;
+    --destructive-foreground: 266 10% 95%;
+
+    --border: 266 25% 25%;
+    --input: 266 25% 25%;
+    --ring: 266 35% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-md border border-white/30 rounded-xl shadow-lg;
+  }
+  
+  .feature-chip {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-obsidian/10 text-obsidian-dark;
+  }
+  
+  .stage-indicator {
+    @apply flex items-center gap-2 text-sm font-medium;
+  }
+  
+  .stage-indicator-active {
+    @apply text-obsidian;
+  }
+  
+  .stage-indicator-completed {
+    @apply text-green-600;
+  }
+  
+  .stage-indicator-waiting {
+    @apply text-muted-foreground;
+  }
+  
+  .markdown-preview {
+    @apply prose prose-sm max-w-none prose-headings:text-obsidian prose-a:text-obsidian prose-a:no-underline hover:prose-a:underline;
+  }
+}
+
+.content-preview code {
+  @apply bg-secondary/50 p-1 rounded text-sm;
+}
+
+/* Smooth scrolling for the whole page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
