@@ -22,7 +22,7 @@ import numpy as np
 import librosa
 import soundfile as sf
 # For transcription (assuming OpenAI Whisper is used)
-import openai
+from openai import OpenAI
 
 # Set up logging
 logging.basicConfig(
@@ -242,8 +242,7 @@ class TranscriptionEngine:
             api_key: API key for the transcription service, if required
         """
         self.api_key = api_key
-        if api_key:
-            openai.api_key = api_key
+        self.client = OpenAI(api_key=api_key)
         
         self.audio_preprocessor = AudioPreprocessor()
         self.text_validator = TextInputValidator()
@@ -271,6 +270,18 @@ class TranscriptionEngine:
             logger.error(f"Unsupported file format: {file_ext}")
             raise ValueError(f"Unsupported file format: {file_ext}. Supported formats are audio files ({', '.join(audio_extensions)}) and text files (.txt, .md)")
     
+    def process_audio(self, audio_path: str) -> List[TranscriptionSegment]:
+        """
+        Process audio file - wrapper for transcribe_audio for API consistency
+        
+        Args:
+            audio_path: Path to the audio file
+            
+        Returns:
+            List of transcription segments
+        """
+        return self.transcribe_audio(audio_path)
+    
     def transcribe_audio(self, audio_path: str) -> List[TranscriptionSegment]:
         """
         Transcribe audio file and extract segments with metadata
@@ -296,7 +307,7 @@ class TranscriptionEngine:
             # Use OpenAI Whisper API to transcribe the audio
             # Note: In a real implementation, you might need to handle chunking for large files
             with open(preprocessed_path, "rb") as audio_file:
-                transcription_response = openai.Audio.transcribe(
+                transcription_response = self.client.audio.transcriptions.create(
                     model="whisper-1",
                     file=audio_file,
                     response_format="verbose_json",  # Request detailed output with timestamps
@@ -305,7 +316,8 @@ class TranscriptionEngine:
             
             # Process the response into our segment format
             segments = []
-            for segment in transcription_response.get("segments", []):
+            response_data = json.loads(transcription_response.model_dump_json())
+            for segment in response_data.get("segments", []):
                 segments.append(TranscriptionSegment(
                     text=segment.get("text", "").strip(),
                     start_time=segment.get("start", 0.0),
